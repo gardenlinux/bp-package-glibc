@@ -1,8 +1,8 @@
-version=2.41-12
+version=2.41-12+deb13u1
 version_suffix=gl0~bp1877
-apt_src glibc
-salsasrc=$(mktemp -d)
-git clone --depth 1 -b debian/$version https://salsa.debian.org/glibc-team/glibc.git $salsasrc
-rm -r $dir/src/debian
-mv $salsasrc/debian $dir/src/
-rm -r $salsasrc
+
+# download debian package
+apt_src glibc="$version"
+
+# download debian package instructions
+#git_src --branch "debian/$version" "https://salsa.debian.org/glibc-team/glibc.git"
