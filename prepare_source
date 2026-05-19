@@ -1,18 +1,18 @@
+# get the orig for 2.42
 orig=$(mktemp)
-debPatches=$(mktemp)
 apt-get install -y curl
 curl -s https://dqf78g7gefsor.cloudfront.net/debian-snapshot/pool/f6383657608ce3465b2ea97fc6ba0749608f64045d67a1940b901f241d5065bc/glibc_2.42.orig.tar.xz -o "${orig}.tar.xz"
-curl -s https://dqf78g7gefsor.cloudfront.net/debian-snapshot/pool/f6383657608ce3465b2ea97fc6ba0749608f64045d67a1940b901f241d5065bc/glibc_2.42-15.debian.tar.xz -o "${debPatches}.tar.xz"
-# add here some sha checks
 if ! echo "69c1e915c8edd75981cbfc6b7654e8fc4e52a48d06b9f706f463492749a9b6fb ${orig}.tar.xz" | sha256sum --check; then
     echo "checksum check failed"; exit 1
 fi
 
-if ! echo "4407a21be5854ca5f1f17c550a6b8586ef134f6eaaf0e6bc078435b468108c61 ${debPatches}.tar.xz" | sha256sum --check; then
-    echo "checksum check failed"; exit 1
-fi
-
 auto_decompress "${orig}.tar.xz" | tee "$dir/orig.tar" | tar --extract --strip-components 1 --directory "$dir/src"
-auto_decompress "${debPatches}.tar.xz" | tar --extract --directory "$dir/src"
+
+# get the debian folder from a specific salsa commit
+tmp_dir="$(mktemp -d)"
+git clone --branch "sid" "https://salsa.debian.org/glibc-team/glibc.git" "$tmp_dir"
+# state of unreleased 2.42-17
+git -C "$tmp_dir" checkout 0e7fede9e9cc122586297bcfc11cd854b8fc1450
+mv "$tmp_dir/debian" "$dir/src"
 
 version_suffix=gl0+bp2150
