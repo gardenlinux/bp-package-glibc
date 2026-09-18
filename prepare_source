@@ -15,4 +15,6 @@ git clone --branch "sid" "https://salsa.debian.org/glibc-team/glibc.git" "$tmp_d
 git -C "$tmp_dir" checkout 0e7fede9e9cc122586297bcfc11cd854b8fc1450
 mv "$tmp_dir/debian" "$dir/src"
 
-version_suffix=gl0+bp2150
+import_upstream_patches
+
+version_suffix=gl1+bp2150
