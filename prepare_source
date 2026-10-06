@@ -1,9 +1,16 @@
 version_orig=2.41-7
-version=2.41-12+deb13u1
+version=2.41-12+deb13u4
 version_suffix=gl0~bp1877
 
-# get the newest debian control files
-git_src --branch "debian/$version" "https://salsa.debian.org/glibc-team/glibc.git"
-
-# get the original debian sources
 apt_src glibc=$version_orig
+
+DEBIAN_SRC=$(mktemp -d)
+git clone -b "debian/$version" --depth=1 "https://salsa.debian.org/glibc-team/glibc.git" "$DEBIAN_SRC"
+pushd "$DEBIAN_SRC"
+git sparse-checkout set debian
+popd
+
+cp -rp "$DEBIAN_SRC/debian" "$dir/src/"
+rm -fR "$DEBIAN_SRC"
+
+import_upstream_patches
