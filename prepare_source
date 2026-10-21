@@ -17,4 +17,4 @@ mv "$tmp_dir/debian" "$dir/src"
 
 import_upstream_patches
 
-version_suffix=gl1+bp2150
+version_suffix=gl2+bp2150
